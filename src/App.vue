@@ -3,7 +3,7 @@
     <b-container>
       <b-row class="fill center">
         <b-col class="align-self-center">
-          <alpha></alpha>
+          <home></home>
         </b-col>
       </b-row>
     </b-container>
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import alpha from "./views/alpha"
+import home from "./views/Home"
 export default {
   name: 'app',
   components: {
-    alpha
+    home
   },
   data () {
     return {
