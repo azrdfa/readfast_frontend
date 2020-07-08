@@ -76,7 +76,7 @@ export default {
                 this.text_splitted = this.text_raw.split(" ")
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
-                    this.reading_time[i] = 300
+                    this.reading_time[i] = 250
                 }
             }
             else {
@@ -85,11 +85,12 @@ export default {
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
                     sentence_word = this.text_splitted[i].split(" ")
-                    this.reading_time[i] = sentence_word.length * 300
+                    this.reading_time[i] = sentence_word.length * 250
                 }
             }
             this.startReading()
-            this.bus.$emit("automateProgress", this.text_splitted.length)
+            console.log(this.reading_time)
+            this.bus.$emit("automateProgress", this.text_splitted.length, this.reading_time)
         },
 
         cleanText() {

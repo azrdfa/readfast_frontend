@@ -16,36 +16,36 @@ export default {
     },
     data() {
         return {
-            animation_time: 250,
+            animation_time: 0,
             progress_value: 0
         }
     },
     methods: {
-        automateProgress(content_length) {
+        automateProgress(content_length, time_dict) {
             let _this = this
 
             function nextStart(index) {
-                if (index > content_length - 1) {
-                } else {
-                    _this.activateProgress()
-                    setTimeout(nextStart, 300, index + 1)
-                }
+                if (!(index > content_length - 1)) {
+                    _this.activateProgress(time_dict[index] - 50)
+                    setTimeout(nextStart, time_dict[index], index + 1)
+                } 
             }
 
             function nextReset(index) {
-                if (index > content_length - 1) {
-                } else {
+                if (!(index > content_length - 1)) {
                     _this.resetProgress()
-                    setTimeout(nextReset, 300, index + 1)
+                    if (!(index >= content_length - 1)) {
+                        setTimeout(nextReset, time_dict[index + 1], index + 1)
+                    }
                 }
             }
             
             setTimeout(nextStart, 0, 0)
-            setTimeout(nextReset, 250, 0)
+            setTimeout(nextReset, time_dict[0] - 50, 0)
         },
 
-        activateProgress() {
-            this.animation_time = 250
+        activateProgress(animation_time) {
+            this.animation_time = animation_time
             this.progress_value = 100
         },
 
