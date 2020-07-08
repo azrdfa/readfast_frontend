@@ -1,5 +1,5 @@
 <template>
-    <div id="beta">
+    <div id="readingmaterial">
         <p>
             Harry Potter and The Sorcerer Stone dalam bahasa indonesia
         </p>
@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-    name: "beta",
+    name: "readingmaterial",
     data() {
         return {
             first_chapter: "Anak Laki-laki Yang Bertahan Hidup MR dan Mrs Dursley yang tinggal di Privet Drive nomor empat bangga menyatakan diri bahwa mereka orang-orang yang normal, untunglah. Mereka tak bisa diharapkan terlibat dengan sesuatu yang ajaib atau misterius, karena mereka sama sekali tak percaya omong kosong seperti itu.",

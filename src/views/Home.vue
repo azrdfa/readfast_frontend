@@ -31,19 +31,19 @@
         backdrop
         shadow>
             <div class="px-3 py-2">
-                <beta @clicked="readChapter"></beta>
+                <readingmaterial @clicked="readChapter"></readingmaterial>
             </div>
         </b-sidebar>
     </div>
 </template>
 <script>
 import Vue from "vue"
-import beta from "../components/beta"
+import readingmaterial from "../components/ReadingMaterial"
 import progressbar from "../components/ProgressBar"
 export default {
     name:"home",
     components: {
-        beta,
+        readingmaterial,
         progressbar
     },
     data () {
