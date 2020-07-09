@@ -2,7 +2,6 @@
     <div id="home">
         <h1 v-if="text_turbo != null" class="text">{{ text_turbo }}</h1>
         <h1 v-else class="text">-</h1>
-        <progressbar :bus="bus"></progressbar>
         <b-form-textarea class="component-margin" rows="5" no-resize v-model="text_raw" placeholder="Tulis kalimat di sini ..."></b-form-textarea>
         <b-dropdown
             size="sm"
@@ -19,6 +18,7 @@
             <b-dropdown-item @click="changeReadType('kata')">Kata Kilat</b-dropdown-item>
             <b-dropdown-item @click="changeReadType('kalimat')">Kalimat Kilat</b-dropdown-item>
         </b-dropdown>
+        <progressbar class="component-margin" :bus="bus"></progressbar>
         <b-row class="component-margin">
             <b-col cols=6>
                 <b-button size="sm" variant="primary" block v-b-toggle.sidebar-1>Bahan Bacaan</b-button>
@@ -76,7 +76,7 @@ export default {
                 this.text_splitted = this.text_raw.split(" ")
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
-                    this.reading_time[i] = 250
+                    this.reading_time[i] = 350
                 }
             }
             else {
@@ -85,7 +85,7 @@ export default {
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
                     sentence_word = this.text_splitted[i].split(" ")
-                    this.reading_time[i] = sentence_word.length * 250
+                    this.reading_time[i] = sentence_word.length * 350
                 }
             }
             this.startReading()

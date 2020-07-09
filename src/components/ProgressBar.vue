@@ -1,6 +1,6 @@
 <template>
     <div id="progressbar">
-        <b-progress :max="100" height="0.5rem">
+        <b-progress :max="100" height="0.25rem">
             <b-progress-bar :value="progress_value" v-bind:style="animationTransition"></b-progress-bar>
         </b-progress>
     </div>
