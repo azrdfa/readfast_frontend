@@ -1,9 +1,15 @@
 <template>
   <div id="app">
     <b-container>
-      <b-row class="fill center">
-        <b-col class="align-self-center">
-          <home></home>
+      <b-row class="fill-top center">
+        <b-col class="align-self-end">
+          <h2 v-if="text == null" style="text-align: center">-</h2>
+          <h2 v-else style="text-align: center">{{ text }}</h2>
+        </b-col>
+      </b-row>
+      <b-row class="fill-bottom center">
+        <b-col>
+          <home @valueChanged="changeText"></home>
         </b-col>
       </b-row>
     </b-container>
@@ -19,6 +25,12 @@ export default {
   },
   data () {
     return {
+      text: null
+    }
+  },
+  methods: {
+    changeText(value) {
+      this.text = value
     }
   }
 }
@@ -30,7 +42,10 @@ export default {
   width: 50%;
   padding: 10px;
 }
-.fill {
-  min-height: 100vh;
+.fill-bottom {
+  min-height: 60vh;
+}
+.fill-top {
+  min-height: 40vh;
 }
 </style>

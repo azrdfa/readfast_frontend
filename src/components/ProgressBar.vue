@@ -17,17 +17,19 @@ export default {
     data() {
         return {
             animation_time: 0,
-            progress_value: 0
+            progress_value: 0,
+            reading_machine_start: null,
+            reading_machine_reset: null
         }
     },
     methods: {
-        automateProgress(content_length, time_dict) {
+        automateProgress(content_length, time_dict, reading_index) {
             let _this = this
 
             function nextStart(index) {
                 if (!(index > content_length - 1)) {
                     _this.activateProgress(time_dict[index] - 50)
-                    setTimeout(nextStart, time_dict[index], index + 1)
+                    _this.reading_machine_start = setTimeout(nextStart, time_dict[index], index + 1)
                 } 
             }
 
@@ -35,13 +37,13 @@ export default {
                 if (!(index > content_length - 1)) {
                     _this.resetProgress()
                     if (!(index >= content_length - 1)) {
-                        setTimeout(nextReset, time_dict[index + 1], index + 1)
+                        _this.reading_machine_reset = setTimeout(nextReset, time_dict[index + 1], index + 1)
                     }
                 }
             }
             
-            setTimeout(nextStart, 0, 0)
-            setTimeout(nextReset, time_dict[0] - 50, 0)
+            this.reading_machine_start = setTimeout(nextStart, 0, reading_index)
+            this.reading_machine_reset = setTimeout(nextReset, time_dict[reading_index] - 50, 0)
         },
 
         activateProgress(animation_time) {
@@ -53,6 +55,13 @@ export default {
             this.animation_time = 50
             this.progress_value = 0
         },
+
+        stopProgress() {
+            console.log("asdas")
+            clearInterval(this.reading_machine_start)
+            clearInterval(this.reading_machine_reset)
+            this.resetProgress()
+        }
     },
     computed: {
         animationTransition() {
@@ -63,6 +72,7 @@ export default {
     },
     mounted() {
         this.bus.$on("automateProgress", this.automateProgress)
+        this.bus.$on("stopProgress", this.stopProgress)
     }
 }
 </script>
