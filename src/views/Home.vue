@@ -18,7 +18,14 @@
         </b-dropdown>
         <progressbar class="component-margin" :bus="bus"></progressbar>
         <b-row class="component-margin">
-            <b-col cols=6>
+            <b-col cols=4>
+                <b-form-select v-model="reading_speed" :options="speed_options" size="sm" v-bind:disabled="is_reading">
+                    <template v-slot:first>
+                        <b-form-select-option :value="null" disabled>-- Pilih kecepatan membaca --</b-form-select-option>
+                    </template>
+                </b-form-select>
+            </b-col>
+            <b-col cols=4>
                 <b-button 
                     v-if="!is_stopped" 
                     size="sm" 
@@ -40,7 +47,7 @@
                     Lanjutkan
                 </b-button>
             </b-col>
-             <b-col cols=6>
+            <b-col cols=4>
                 <b-button v-bind:disabled="!is_reading" @click="forceStopReading" size="sm" variant="primary" block>Ulangi</b-button>
             </b-col>
         </b-row>
@@ -81,7 +88,13 @@ export default {
             text_raw: '',
             reading_machine: null,
             read_word: true,
-            bus: new Vue()
+            bus: new Vue(),
+            reading_speed: 1050,
+            speed_options: [
+                { value: 1050, text: "Lamban" },
+                { value: 550, text: "Sedang" },
+                { value: 250, text: "Cepat" },
+            ]
         }
     },
     methods: {
@@ -101,7 +114,7 @@ export default {
                 this.text_splitted = this.text_raw.split(" ")
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
-                    this.reading_time[i] = 250
+                    this.reading_time[i] = this.reading_speed
                 }
             }
             else {
@@ -110,7 +123,7 @@ export default {
                 this.cleanText()
                 for (let i = 0; i < this.text_splitted.length; i++) {
                     sentence_word = this.text_splitted[i].split(" ")
-                    this.reading_time[i] = sentence_word.length * 250
+                    this.reading_time[i] = sentence_word.length * this.reading_speed
                 }
             }
 
