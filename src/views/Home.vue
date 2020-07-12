@@ -34,7 +34,7 @@
                     @click="stopReading" 
                     block
                 >
-                    Berhenti
+                    <b-icon icon="pause" />
                 </b-button>
                 <b-button 
                     v-else 
@@ -44,39 +44,29 @@
                     @click="continueReading" 
                     block
                 >
-                    Lanjutkan
+                    <b-icon icon="play" />
                 </b-button>
             </b-col>
             <b-col cols=4>
-                <b-button v-bind:disabled="!is_reading" @click="forceStopReading" size="sm" variant="primary" block>Ulangi</b-button>
+                <b-button v-bind:disabled="!is_reading" @click="forceStopReading" size="sm" variant="primary" block>
+                    <b-icon icon="arrow-clockwise"></b-icon>
+                </b-button>
             </b-col>
         </b-row>
-        <b-row class="component-margin">
-            <b-col cols=6>
-                <b-button size="sm" variant="primary" block v-b-toggle.sidebar-1>Bahan Bacaan</b-button>
-            </b-col>
-        </b-row>
-        <b-sidebar 
-        id="sidebar-1" 
-        title="Bahan Bacaan" 
-        backdrop-variant="info"
-        backdrop
-        shadow>
-            <div class="px-3 py-2">
-                <readingmaterial @clicked="readChapter"></readingmaterial>
-            </div>
-        </b-sidebar>
     </div>
 </template>
 <script>
 import Vue from "vue"
-import readingmaterial from "../components/ReadingMaterial"
 import progressbar from "../components/ProgressBar"
+import { BIcon, BIconPlay, BIconPause, BIconArrowClockwise } from 'bootstrap-vue'
 export default {
     name:"home",
     components: {
-        readingmaterial,
-        progressbar
+        progressbar,
+        BIcon,
+        BIconPlay,
+        BIconPause,
+        BIconArrowClockwise
     },
     data () {
         return {

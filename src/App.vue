@@ -7,9 +7,14 @@
           <h2 v-else style="text-align: center">{{ text }}</h2>
         </b-col>
       </b-row>
-      <b-row class="fill-bottom center">
+      <b-row class="fill-center center">
         <b-col>
           <home @valueChanged="changeText"></home>
+        </b-col>
+      </b-row>
+      <b-row class="fill-bottom">
+        <b-col class="align-self-start">
+          <readingmaterial />
         </b-col>
       </b-row>
     </b-container>
@@ -18,10 +23,12 @@
 
 <script>
 import home from "./views/Home"
+import readingmaterial from './components/ReadingMaterial'
 export default {
   name: 'app',
   components: {
-    home
+    home,
+    readingmaterial
   },
   data () {
     return {
@@ -43,7 +50,10 @@ export default {
   padding: 10px;
 }
 .fill-bottom {
-  min-height: 60vh;
+  min-height: 25vh;
+}
+.fill-center {
+  min-height: 35vh;
 }
 .fill-top {
   min-height: 40vh;

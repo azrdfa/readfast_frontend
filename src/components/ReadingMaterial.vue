@@ -1,30 +1,92 @@
 <template>
     <div id="readingmaterial">
-        <p>
-            Harry Potter and The Sorcerer Stone dalam bahasa indonesia
-        </p>
-        <b-list-group>
-            <b-list-group-item v-on:click="firstChapter" action>Chapter 1</b-list-group-item>
-            <b-list-group-item v-on:click="secondChapter" action>Chapter 2</b-list-group-item>
-        </b-list-group>
+        <b-card-group deck>
+            <b-card v-for="(book,index) in books" v-bind:key="index" class="text-truncate">  
+                <b-card-title>{{ book.title }}</b-card-title>
+                <b-card-sub-title>{{ book.sub_title }}</b-card-sub-title>
+                <template v-slot:footer>
+                    <b-button size="sm" @click="openModal(index)" variant="primary" block>Lihat Chapter</b-button>
+                </template>
+            </b-card>
+        </b-card-group>
+        <b-modal id="chapter-modal" hide-footer>
+            <template v-slot:modal-header>
+                <div>
+                    <h5>{{ title }}</h5>
+                    {{ sub_title }}
+                </div>
+                <b-button size="sm" variant="primary" @click="$bvModal.hide('chapter-modal')">
+                    <b-icon-x-circle />
+                </b-button>
+            </template>
+            <div class="chapter-container">
+                <b-button size="sm" 
+                v-for="(chapter, index) in chapters" 
+                variant="outline-primary" 
+                class="chapter-card"
+                v-bind:key="index"
+                >
+                    Chapter {{ chapter }}
+                </b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 <script>
+import { BIcon, BIconXCircle } from 'bootstrap-vue'
 export default {
     name: "readingmaterial",
+    components: {
+        BIcon,
+        BIconXCircle
+    },
     data() {
         return {
-            first_chapter: "Anak Laki-laki Yang Bertahan Hidup MR dan Mrs Dursley yang tinggal di Privet Drive nomor empat bangga menyatakan diri bahwa mereka orang-orang yang normal, untunglah. Mereka tak bisa diharapkan terlibat dengan sesuatu yang ajaib atau misterius, karena mereka sama sekali tak percaya omong kosong seperti itu.",
-            second_chapter: "Mr Dursley adalah direktur Grunnings, perusahaan yang memproduksi bor. Dia laki-laki besar-gemuk, nyaris tanpa leher, walaupun kumisnya besar sekali. Mrs Dursley kurus berambut pirang, lehernya dua kali panjang leher biasa. Baginya ini menguntungkan, karena kegemarannya adalah menjulurkan leher di atas pagar-pagar, mengintip para tetangga. Suami-istri Dursley mempunyai seorang anak laki-laki kecil bernama Dudley dan menurut pendapat mereka, di dunia ini tak ada anak lain yang sehebat Dudley."
+            title:"",
+            sub_title:"",
+            chapters: [],
+            books: [
+                {
+                    title: "Harry Potter", 
+                    sub_title: "and The Philosopher's Stone",
+                    chapters: [1,2,3]
+                },
+                {
+                    title: "Harry Potter", 
+                    sub_title: "and The Chamber of Secrets",
+                    chapters: [1,2,3,4]
+                },
+                {
+                    title: "Harry Potter", 
+                    sub_title: "and The Prisoner of Azkaban",
+                    chapters: [1,2,3,4,5]
+                },
+                {
+                    title: "Harry Potter", 
+                    sub_title: "and The Goblet of Fire",
+                    chapters: [1,2,3,4,5,6]
+                }
+            ]
         }
     },
     methods: {
-        firstChapter() {
-            this.$emit("clicked", this.first_chapter)
-        },
-        secondChapter() {
-            this.$emit("clicked", this.second_chapter)
+        openModal(index) {
+            this.title = this.books[index].title
+            this.sub_title = this.books[index].sub_title
+            this.chapters = this.books[index].chapters
+            this.$bvModal.show("chapter-modal")
         }
     }
 }
 </script>
+<style scoped>
+    .chapter-container {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+    .chapter-card {
+        flex-basis: 30%;
+        margin-bottom: 5%;
+    }
+</style>
