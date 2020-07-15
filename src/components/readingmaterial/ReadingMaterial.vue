@@ -1,11 +1,31 @@
 <template>
   <div id="readingmaterial">
-    <b-card-group v-if="!load_book" deck>
+    <div v-if="load_books" class="custom-animation">
+      <b-icon-arrow-clockwise animation="spin" font-scale="2" />
+      <p>Tunggu sebentar...</p>
+    </div>
+    <div v-else class="custom-animation">
+      <p>Bahan Bacaan</p>
+      <b-icon-chevron-compact-down
+        v-if="!show_books"
+        font-scale="3"
+        class="library_toggle"
+        @click="showBooks(true)"
+      />
+      <b-icon-chevron-compact-up
+        v-else
+        font-scale="3"
+        class="library_toggle"
+        @click="showBooks(false)"
+      />
+    </div>
+    <div v-if="show_books" class="flex-wrap-container margin-component">
       <b-card
-        class="text-truncate"
+        class="text-truncate flex-wrap-multiple"
         v-for="(book, index) in books"
         v-bind:key="index"
       >
+        <template v-slot:header> Bahasa {{ book.language }} </template>
         <b-card-title>{{ book.title }}</b-card-title>
         <b-card-sub-title>{{ book.sub_title }}</b-card-sub-title>
         <template v-slot:footer>
@@ -14,10 +34,6 @@
           >
         </template>
       </b-card>
-    </b-card-group>
-    <div v-else class="custom-animation">
-      <b-icon-arrow-clockwise animation="spin" font-scale="2" />
-      <p>Wait a second...</p>
     </div>
     <b-modal id="chapter-modal" hide-footer>
       <template v-slot:modal-header>
@@ -33,12 +49,12 @@
           <b-icon-x-circle />
         </b-button>
       </template>
-      <div class="chapter-container">
+      <div class="flex-wrap-container">
         <b-button
           size="sm"
           v-for="(chapter, index) in selected_book.chapters"
           variant="outline-primary"
-          class="chapter-button"
+          class="flex-wrap-single"
           v-bind:key="index"
           style="text-align: start;"
           @click="readChapter(chapter.id)"
@@ -56,19 +72,23 @@
 </template>
 <script>
 /* eslint-disable prettier/prettier */
+import Vue from 'vue'
 import axios from 'axios'
-import { BIcon, BIconXCircle, BIconArrowClockwise } from 'bootstrap-vue'
+import { BIcon, BIconXCircle, BIconArrowClockwise, BIconChevronCompactDown, BIconChevronCompactUp } from 'bootstrap-vue'
 export default {
   name: 'readingmaterial',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     BIcon,
     BIconXCircle,
-    BIconArrowClockwise
+    BIconArrowClockwise,
+    BIconChevronCompactDown,
+    BIconChevronCompactUp
   },
   data () {
     return {
-      load_book: true,
+      show_books: false,
+      load_books: true,
       load_chapter: false,
       selected_chapter: 0,
       selected_book: {
@@ -80,6 +100,18 @@ export default {
     }
   },
   methods: {
+    showBooks (value) {
+      const _this = this
+      if (value === true) {
+        this.show_books = true
+        Vue.nextTick(function () {
+          const library = _this.$el.getElementsByClassName('library_toggle')[0]
+          library.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        })
+      } else {
+        this.show_books = false
+      }
+    },
     openModal (index) {
       this.selected_book.title = this.books[index].title
       this.selected_book.sub_title = this.books[index].sub_title
@@ -102,7 +134,7 @@ export default {
   mounted () {
     axios.get('http://localhost:8000/readingmaterial/book/').then(response => {
       this.books = response.data
-      this.load_book = false
+      this.load_books = false
     })
   }
 }
