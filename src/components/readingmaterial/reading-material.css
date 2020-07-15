@@ -1,15 +1,40 @@
-.chapter-container {
+.margin-component {
+  margin-top: 5%;
+}
+
+.flex-wrap-container {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
 }
 
-.chapter-button {
+.flex-wrap-single {
   flex-basis: 100%;
   margin-bottom: 3%;
+}
+
+.flex-wrap-multiple {
+  flex-basis: 30%;
+  margin-bottom: 5%;
 }
 
 .custom-animation {
   text-align:center; 
   margin-top: 5%;
+}
+
+.custom-animation .bi-chevron-compact-down {
+  transition: .2s;
+}
+
+.custom-animation .bi-chevron-compact-down:hover {
+  transform: scale(1.5);
+}
+
+.custom-animation .bi-chevron-compact-up {
+  transition: .2s;
+}
+
+.custom-animation .bi-chevron-compact-up:hover {
+  transform: scale(1.5);
 }
