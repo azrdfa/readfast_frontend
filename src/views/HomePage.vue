@@ -4,7 +4,7 @@
       <b-row class="fill-top center">
         <b-col class="align-self-end" style="text-align: center;">
           <h2 v-if="display == ''">-</h2>
-          <h2 v-else>{{ display }}</h2>
+          <h2 v-bind:style="displayStyle" v-else>{{ display }}</h2>
         </b-col>
       </b-row>
       <b-row class="fill-center center">
@@ -36,15 +36,29 @@ export default {
   data: function () {
     return {
       display: '',
-      content: ''
+      content: '',
+      // default for h2 is 2rem
+      display_size: 2
     }
   },
   methods: {
     editDisplay (value) {
+      if (value.length >= 210) {
+        this.display_size = 1.5
+      } else {
+        this.display_size = 2
+      }
       this.display = value
     },
     editContent (value) {
       this.content = value
+    }
+  },
+  computed: {
+    displayStyle () {
+      return {
+        'font-size': `${this.display_size}rem`
+      }
     }
   }
 }
