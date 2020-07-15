@@ -1,0 +1,15 @@
+.chapter-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.chapter-button {
+  flex-basis: 100%;
+  margin-bottom: 3%;
+}
+
+.custom-animation {
+  text-align:center; 
+  margin-top: 5%;
+}

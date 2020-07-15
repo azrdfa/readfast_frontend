@@ -1,0 +1,15 @@
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    padding: 10px;
+  }
+.fill-bottom {
+min-height: 25vh;
+}
+.fill-center {
+min-height: 35vh;
+}
+.fill-top {
+min-height: 40vh;
+}
