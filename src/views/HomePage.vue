@@ -1,5 +1,14 @@
 <template>
-  <div id="homepage">
+  <div id="homepage" class="relative-container" :class="mode">
+    <div class="absolute-container">
+      <toggle-button
+        @change="editMode"
+        :switch-color="{ checked: '#192734', unchecked: '#ffffff' }"
+        :color="{ checked: '#ffffff', unchecked: '#192734' }"
+        :speed="500"
+      />
+      <h1>{{ mode }} mode</h1>
+    </div>
     <b-container>
       <b-row class="fill-top center">
         <b-col class="align-self-end" style="text-align: center;">
@@ -12,12 +21,13 @@
           <ReadingMachine
             @display-changed="editDisplay"
             v-bind:content.sync="content"
+            :mode="mode"
           />
         </b-col>
       </b-row>
       <b-row class="fill-bottom">
         <b-col class="align-self-start">
-          <ReadingMaterial @content-changed="editContent" />
+          <ReadingMaterial @content-changed="editContent" :mode="mode" />
         </b-col>
       </b-row>
     </b-container>
@@ -38,7 +48,8 @@ export default {
       display: '',
       content: '',
       // default for h2 is 2rem
-      display_size: 2
+      display_size: 2,
+      mode: 'light'
     }
   },
   methods: {
@@ -52,6 +63,13 @@ export default {
     },
     editContent (value) {
       this.content = value
+    },
+    editMode (object) {
+      if (object.value === true) {
+        this.mode = 'dark'
+      } else {
+        this.mode = 'light'
+      }
     }
   },
   computed: {
