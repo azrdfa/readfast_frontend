@@ -13,3 +13,22 @@ min-height: 35vh;
 .fill-top {
 min-height: 40vh;
 }
+
+.relative-container {
+  position: relative;
+}
+
+.absolute-container {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}
+
+.dark {
+  background: rgba(18,18,18);
+  color: white;
+}
+
+#homepage {
+  transition: background 0.3s ease-in-out;
+}

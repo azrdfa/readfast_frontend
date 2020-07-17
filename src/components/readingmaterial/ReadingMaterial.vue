@@ -24,18 +24,30 @@
         class="text-truncate flex-wrap-multiple"
         v-for="(book, index) in books"
         v-bind:key="index"
+        :bg-variant="changeVariantInvert"
       >
         <template v-slot:header> Bahasa {{ book.language }} </template>
         <b-card-title>{{ book.title }}</b-card-title>
         <b-card-sub-title>{{ book.sub_title }}</b-card-sub-title>
         <template v-slot:footer>
-          <b-button variant="primary" size="sm" @click="openModal(index)" block
+          <b-button
+            :variant="changeOutlineVariant"
+            size="sm"
+            @click="openModal(index)"
+            block
             >Lihat Chapter</b-button
           >
         </template>
       </b-card>
     </div>
-    <b-modal id="chapter-modal" hide-footer>
+    <b-modal
+      id="chapter-modal"
+      :body-bg-variant="changeVariantInvert"
+      :header-bg-variant="changeVariantInvert"
+      :header-text-variant="changeVariant"
+      scrollable
+      hide-footer
+    >
       <template v-slot:modal-header>
         <div>
           <h5>{{ selected_book.title }}</h5>
@@ -43,7 +55,7 @@
         </div>
         <b-button
           size="sm"
-          variant="primary"
+          :variant="changeOutlineVariant"
           @click="$bvModal.hide('chapter-modal')"
         >
           <b-icon-x-circle />
@@ -53,7 +65,7 @@
         <b-button
           size="sm"
           v-for="(chapter, index) in selected_book.chapters"
-          variant="outline-primary"
+          :variant="changeOutlineVariant"
           class="flex-wrap-single"
           v-bind:key="index"
           style="text-align: start;"
@@ -77,6 +89,12 @@ import axios from 'axios'
 import { BIcon, BIconXCircle, BIconArrowClockwise, BIconChevronCompactDown, BIconChevronCompactUp } from 'bootstrap-vue'
 export default {
   name: 'readingmaterial',
+  props: {
+    mode: {
+      type: String,
+      required: true
+    }
+  },
   components: {
     // eslint-disable-next-line vue/no-unused-components
     BIcon,
@@ -129,6 +147,25 @@ export default {
           this.selected_chapter = 0
           this.$bvModal.hide('chapter-modal')
         })
+    }
+  },
+  computed: {
+    changeVariantInvert: function () {
+      return this.mode
+    },
+    changeVariant: function () {
+      if (this.mode === 'dark') {
+        return 'light'
+      } else {
+        return 'dark'
+      }
+    },
+    changeOutlineVariant: function () {
+      if (this.mode === 'dark') {
+        return 'outline-light'
+      } else {
+        return 'outline-dark'
+      }
     }
   },
   mounted () {

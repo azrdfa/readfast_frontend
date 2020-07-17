@@ -11,8 +11,8 @@
     <b-dropdown
       size="sm"
       class="component-margin"
-      split-variant="outline-primary"
-      variant="primary"
+      :split-variant="changeOutlineVariant"
+      :variant="changeVariant"
       v-bind:text="read_word ? 'Kata Kilat' : 'Kalimat Kilat'"
       v-bind:disabled="is_reading || content == ''"
       @click="initReadingMachine"
@@ -27,7 +27,7 @@
         >Kalimat Kilat</b-dropdown-item
       >
     </b-dropdown>
-    <progressbar class="component-margin" :bus="bus" />
+    <progressbar class="component-margin" :bus="bus" :mode="mode" />
     <b-row class="component-margin">
       <b-col cols="4">
         <b-form-select
@@ -47,7 +47,7 @@
         <b-button
           v-if="!is_stopped"
           size="sm"
-          variant="primary"
+          :variant="changeVariant"
           v-bind:disabled="!is_reading"
           @click="stopReading"
           block
@@ -57,7 +57,7 @@
         <b-button
           v-else
           size="sm"
-          variant="primary"
+          :variant="changeVariant"
           v-bind:disabled="!is_reading"
           @click="continueReading"
           block
@@ -70,7 +70,7 @@
           v-bind:disabled="!is_reading"
           @click="forceStopReading"
           size="sm"
-          variant="primary"
+          :variant="changeVariant"
           block
         >
           <b-icon-arrow-clockwise />
@@ -98,6 +98,10 @@ export default {
     content: {
       type: String,
       required: true
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -115,7 +119,9 @@ export default {
         { value: 850, text: 'Lamban' },
         { value: 450, text: 'Sedang' },
         { value: 250, text: 'Cepat' }
-      ]
+      ],
+      current_variant: this.mode,
+      current_outline_variant: 'outline-' + this.mode
     }
   },
   methods: {
@@ -205,6 +211,22 @@ export default {
       this.$emit('update:content', value)
     }
 
+  },
+  computed: {
+    changeVariant: function () {
+      if (this.mode === 'dark') {
+        return 'light'
+      } else {
+        return 'dark'
+      }
+    },
+    changeOutlineVariant: function () {
+      if (this.mode === 'dark') {
+        return 'outline-light'
+      } else {
+        return 'outline-dark'
+      }
+    }
   }
 }
 </script>

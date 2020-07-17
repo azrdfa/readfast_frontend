@@ -3,7 +3,8 @@
     <b-progress :max="100" height="0.25rem">
       <b-progress-bar
         :value="progress_value"
-        v-bind:style="animationTransition"
+        :style="animationTransition"
+        :class="changeVariant"
       ></b-progress-bar>
     </b-progress>
   </div>
@@ -15,6 +16,10 @@ export default {
   props: {
     bus: {
       type: Object,
+      required: true
+    },
+    mode: {
+      type: String,
       required: true
     }
   },
@@ -67,9 +72,16 @@ export default {
     }
   },
   computed: {
-    animationTransition () {
+    animationTransition: function () {
       return {
         transition: `width ${this.animation_time}ms ease-out`
+      }
+    },
+    changeVariant: function () {
+      if (this.mode === 'dark') {
+        return 'bg-secondary'
+      } else {
+        return 'bg-dark'
       }
     }
   },
