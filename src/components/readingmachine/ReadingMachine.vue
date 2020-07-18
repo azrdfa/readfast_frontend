@@ -14,14 +14,14 @@
       no-resize
       :value="content"
       v-on:change="changeContent"
-      placeholder="Tulis kalimat di sini ..."
+      placeholder="Write something here.."
     ></b-form-textarea>
     <b-dropdown
       size="sm"
       class="component-margin"
       :split-variant="changeOutlineVariant"
       :variant="changeVariant"
-      :text="read_word ? 'Kata Kilat' : 'Kalimat Kilat'"
+      :text="read_word ? 'Read by word' : 'Read by sentence'"
       :disabled="is_reading || content == ''"
       @click="initReadingMachine"
       dropright
@@ -29,10 +29,10 @@
       block
     >
       <b-dropdown-item @click="changeReadingStyle('word')"
-        >Kata Kilat</b-dropdown-item
+        >Read by word</b-dropdown-item
       >
       <b-dropdown-item @click="changeReadingStyle('sentence')"
-        >Kalimat Kilat</b-dropdown-item
+        >Read by sentence</b-dropdown-item
       >
     </b-dropdown>
     <!-- <progressbar class="component-margin" :bus="bus" :mode="mode" /> -->
@@ -46,7 +46,7 @@
         >
           <template v-slot:first>
             <b-form-select-option :value="null" disabled
-              >-- Pilih kecepatan membaca --</b-form-select-option
+              >-- Reading speed --</b-form-select-option
             >
           </template>
         </b-form-select>
@@ -128,9 +128,9 @@ export default {
       read_word: true,
       reading_speed: 1000,
       speed_option: [
-        { value: 1000, text: 'Lamban' },
-        { value: 700, text: 'Sedang' },
-        { value: 300, text: 'Cepat' }
+        { value: 1000, text: 'Slow' },
+        { value: 700, text: 'Medium' },
+        { value: 300, text: 'Fast' }
       ]
     }
   },
