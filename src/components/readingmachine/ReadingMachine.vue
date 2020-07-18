@@ -1,5 +1,12 @@
 <template>
-  <div id="readingmachine">
+  <div id="readingmachine" class="relative-container">
+    <b-button
+      size="sm"
+      :variant="changeVariant"
+      class="absolute-container"
+      :disabled="!(is_reading && !read_word)"
+      ><b-icon-skip-forward
+    /></b-button>
     <b-form-textarea
       class="component-margin"
       rows="5"
@@ -13,8 +20,8 @@
       class="component-margin"
       :split-variant="changeOutlineVariant"
       :variant="changeVariant"
-      v-bind:text="read_word ? 'Kata Kilat' : 'Kalimat Kilat'"
-      v-bind:disabled="is_reading || content == ''"
+      :text="read_word ? 'Kata Kilat' : 'Kalimat Kilat'"
+      :disabled="is_reading || content == ''"
       @click="initReadingMachine"
       dropright
       split
@@ -34,7 +41,7 @@
           v-model="reading_speed"
           :options="speed_option"
           size="sm"
-          v-bind:disabled="is_reading"
+          :disabled="is_reading"
         >
           <template v-slot:first>
             <b-form-select-option :value="null" disabled
@@ -48,7 +55,7 @@
           v-if="!is_stopped"
           size="sm"
           :variant="changeVariant"
-          v-bind:disabled="!is_reading"
+          :disabled="!is_reading"
           @click="stopReading"
           block
         >
@@ -58,7 +65,7 @@
           v-else
           size="sm"
           :variant="changeVariant"
-          v-bind:disabled="!is_reading"
+          :disabled="!is_reading"
           @click="continueReading"
           block
         >
@@ -67,7 +74,7 @@
       </b-col>
       <b-col cols="4">
         <b-button
-          v-bind:disabled="!is_reading"
+          :disabled="!is_reading"
           @click="forceStopReading"
           size="sm"
           :variant="changeVariant"
@@ -83,7 +90,7 @@
 /* eslint-disable prettier/prettier */
 import Vue from 'vue'
 import progressbar from '@/components/readingmachine/ProgressBar'
-import { BIcon, BIconPlay, BIconPause, BIconArrowClockwise } from 'bootstrap-vue'
+import { BIcon, BIconPlay, BIconPause, BIconArrowClockwise, BIconSkipForward } from 'bootstrap-vue'
 export default {
   name: 'readingmachine',
   components: {
@@ -92,7 +99,8 @@ export default {
     BIcon,
     BIconPlay,
     BIconPause,
-    BIconArrowClockwise
+    BIconArrowClockwise,
+    BIconSkipForward
   },
   props: {
     content: {
