@@ -32,19 +32,19 @@ export default {
     }
   },
   methods: {
-    automateProgress (contentLength, timeDict, readingIndex) {
+    startProgress (contentLength, timeDict, readingIndex) {
       const _this = this
 
       function nextStart (index) {
         if (!(index > contentLength - 1)) {
-          _this.activateProgress(timeDict[index] - 50)
+          _this.addValue(timeDict[index] - 50)
           _this.reading_machine_start = setTimeout(nextStart, timeDict[index], index + 1)
         }
       }
 
       function nextReset (index) {
         if (!(index > contentLength - 1)) {
-          _this.resetProgress()
+          _this.decreaseValue()
           if (!(index >= contentLength - 1)) {
             _this.reading_machine_reset = setTimeout(nextReset, timeDict[index + 1], index + 1)
           }
@@ -55,12 +55,12 @@ export default {
       this.reading_machine_reset = setTimeout(nextReset, timeDict[readingIndex] - 50, 0)
     },
 
-    activateProgress (animationTime) {
+    addValue (animationTime) {
       this.animation_time = animationTime
       this.progress_value = 100
     },
 
-    resetProgress () {
+    decreaseValue () {
       this.animation_time = 50
       this.progress_value = 0
     },
@@ -68,7 +68,7 @@ export default {
     stopProgress () {
       clearInterval(this.reading_machine_start)
       clearInterval(this.reading_machine_reset)
-      this.resetProgress()
+      this.decreaseValue()
     }
   },
   computed: {
@@ -86,7 +86,7 @@ export default {
     }
   },
   mounted () {
-    this.bus.$on('start-progress', this.automateProgress)
+    this.bus.$on('start-progress', this.startProgress)
     this.bus.$on('stop-progress', this.stopProgress)
   }
 }

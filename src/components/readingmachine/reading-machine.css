@@ -1,3 +1,13 @@
 .component-margin {
     margin-top: 10px;
 }
+
+.relative-container {
+    position: relative;
+  }
+  
+.absolute-container {
+    position: absolute;
+    right: 0;
+    top: -2.5rem;
+}
