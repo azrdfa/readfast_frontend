@@ -5,7 +5,7 @@
       <p>Tunggu sebentar...</p>
     </div>
     <div v-else class="custom-animation">
-      <p>Bahan Bacaan</p>
+      <p>Reading Material</p>
       <b-icon-chevron-compact-down
         v-if="!show_books"
         font-scale="3"
@@ -26,7 +26,7 @@
         v-bind:key="index"
         :bg-variant="changeVariantInvert"
       >
-        <template v-slot:header> Bahasa {{ book.language }} </template>
+        <template v-slot:header> Available in {{ book.language }} </template>
         <b-card-title>{{ book.title }}</b-card-title>
         <b-card-sub-title>{{ book.sub_title }}</b-card-sub-title>
         <template v-slot:footer>
@@ -35,7 +35,7 @@
             size="sm"
             @click="openModal(index)"
             block
-            >Lihat Chapter</b-button
+            >Chapter List</b-button
           >
         </template>
       </b-card>
