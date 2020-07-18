@@ -5,6 +5,7 @@
       :variant="changeVariant"
       class="absolute-container"
       :disabled="!(is_reading && !read_word)"
+      @click="skipReading"
       ><b-icon-skip-forward
     /></b-button>
     <b-form-textarea
@@ -34,7 +35,7 @@
         >Kalimat Kilat</b-dropdown-item
       >
     </b-dropdown>
-    <progressbar class="component-margin" :bus="bus" :mode="mode" />
+    <!-- <progressbar class="component-margin" :bus="bus" :mode="mode" /> -->
     <b-row class="component-margin">
       <b-col cols="4">
         <b-form-select
@@ -94,6 +95,7 @@ import { BIcon, BIconPlay, BIconPause, BIconArrowClockwise, BIconSkipForward } f
 export default {
   name: 'readingmachine',
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     progressbar,
     // eslint-disable-next-line vue/no-unused-components
     BIcon,
@@ -114,22 +116,22 @@ export default {
   },
   data () {
     return {
+      bus: new Vue(),
+      // ====> temporary value
       is_reading: false,
       is_stopped: false,
-      text_splitted: '',
+      text_splitted: [],
       reading_index: 0,
       reading_time: {},
       reading_machine: null,
+      // ====> temporary value
       read_word: true,
-      bus: new Vue(),
-      reading_speed: 850,
+      reading_speed: 1000,
       speed_option: [
-        { value: 850, text: 'Lamban' },
-        { value: 450, text: 'Sedang' },
-        { value: 250, text: 'Cepat' }
-      ],
-      current_variant: this.mode,
-      current_outline_variant: 'outline-' + this.mode
+        { value: 1000, text: 'Lamban' },
+        { value: 700, text: 'Sedang' },
+        { value: 300, text: 'Cepat' }
+      ]
     }
   },
   methods: {
@@ -160,7 +162,7 @@ export default {
 
       this.is_reading = true
       this.startReading()
-      this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
+      // this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
     },
 
     cleanText () {
@@ -193,30 +195,48 @@ export default {
       clearInterval(this.reading_machine)
       this.is_reading = false
       this.is_stopped = false
-      this.text_splitted = ''
+      this.text_splitted = []
       this.reading_index = 0
       this.reading_time = {}
     },
 
     stopReading () {
       clearInterval(this.reading_machine)
-      this.bus.$emit('stop-progress')
+      // this.bus.$emit('stop-progress')
       this.is_stopped = true
     },
 
     continueReading () {
       this.is_stopped = false
       this.startReading()
-      this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
+      // this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
     },
 
     forceStopReading () {
-      this.bus.$emit('stop-progress')
+      // this.bus.$emit('stop-progress')
       this.resetReading()
     },
 
     changeContent (value) {
       this.$emit('update:content', value)
+    },
+
+    skipReading () {
+      // eslint-disable-next-line no-unused-vars
+      const _this = this
+      const currentIndex = this.reading_index + 1
+      if (currentIndex === this.text_splitted.length) {
+        // this.bus.$emit('stop-progress')
+        this.resetReading()
+      } else {
+        clearInterval(this.reading_machine)
+        // this.bus.$emit('stop-progress')
+        this.reading_index++
+        // setTimeout(function () {
+        // _this.bus.$emit('start-progress', _this.text_splitted.length, _this.reading_time, _this.reading_index)
+        // }, 50)
+        this.startReading()
+      }
     }
 
   },
