@@ -1,22 +1,28 @@
 <template>
   <div id="homepage" class="relative-container" :class="mode">
-    <div class="absolute-container">
+    <div class="absolute-container" style="text-align: right;">
       <toggle-button
         @change="editMode"
         :switch-color="{ checked: '#192734', unchecked: '#ffffff' }"
         :color="{ checked: '#ffffff', unchecked: '#192734' }"
         :speed="500"
       />
-      <h1>{{ mode }} mode</h1>
+      <h3>{{ mode }} mode</h3>
     </div>
-    <b-container>
+    <b-container id="homebody">
+      <b-img
+        :class="{ invert_effect: mode === 'dark' }"
+        center
+        :src="logo"
+        alt="logo"
+      />
       <b-row class="fill-top center">
         <b-col class="align-self-end" style="text-align: center;">
           <h2 v-if="display == ''">-</h2>
           <h2 v-bind:style="displayStyle" v-else>{{ display }}</h2>
         </b-col>
       </b-row>
-      <b-row class="fill-center center">
+      <b-row class="center">
         <b-col class="align-self-start">
           <ReadingMachine
             @display-changed="editDisplay"
@@ -25,26 +31,30 @@
           />
         </b-col>
       </b-row>
-      <b-row class="fill-bottom">
+      <b-row>
         <b-col class="align-self-start">
           <ReadingMaterial @content-changed="editContent" :mode="mode" />
         </b-col>
       </b-row>
     </b-container>
+    <Footer />
   </div>
 </template>
 <script>
 /* eslint-disable prettier/prettier */
 import ReadingMachine from '@/components/readingmachine/ReadingMachine'
 import ReadingMaterial from '@/components/readingmaterial/ReadingMaterial'
+import Footer from '@/components/footer/Footer'
 export default {
   name: 'homepage',
   components: {
     ReadingMachine,
-    ReadingMaterial
+    ReadingMaterial,
+    Footer
   },
   data: function () {
     return {
+      logo: 'src/assets/read_fast.png',
       display: '',
       content: '',
       // default for h2 is 2rem
