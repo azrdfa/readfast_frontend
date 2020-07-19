@@ -2,7 +2,7 @@
   <div id="readingmaterial">
     <div v-if="load_books" class="custom-animation">
       <b-icon-arrow-clockwise animation="spin" font-scale="2" />
-      <p>Tunggu sebentar...</p>
+      <p>Wait a second...</p>
     </div>
     <div v-else class="custom-animation">
       <p>Reading Material</p>
