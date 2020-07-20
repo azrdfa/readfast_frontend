@@ -146,14 +146,14 @@ export default {
     initReadingMachine () {
       if (this.read_word) {
         this.text_splitted = this.content.split(' ')
-        this.cleanText()
+        this.cleanText(this.read_word)
         for (let i = 0; i < this.text_splitted.length; i++) {
           this.reading_time[i] = this.reading_speed
         }
       } else {
         let sentenceWord
         this.text_splitted = this.content.split('.')
-        this.cleanText()
+        this.cleanText(this.read_word)
         for (let i = 0; i < this.text_splitted.length; i++) {
           sentenceWord = this.text_splitted[i].split(' ')
           this.reading_time[i] = sentenceWord.length * this.reading_speed
@@ -165,24 +165,35 @@ export default {
       // this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
     },
 
-    cleanText () {
+    cleanText (isWord) {
       const tmpTextSplitted = []
       this.text_splitted.forEach(function (value) {
         if (value !== '') {
           tmpTextSplitted.push(value)
         }
       })
+      if (isWord) {
+        tmpTextSplitted.forEach(function (value) {
+          var currentChar, i, len
+          for (i = 0, len = value.length; i < len; i++) {
+            currentChar = value.charCodeAt(i)
+            if (!(currentChar > 47 && currentChar < 58) && !(currentChar > 64 && currentChar < 91) && !(currentChar > 96 && currentChar < 123)) {
+              console.log(value + ' mistake at index ' + i)
+            }
+          }
+        })
+      }
       this.text_splitted = tmpTextSplitted
     },
 
     startReading () {
       const _this = this
-      this.$emit('display-changed', this.text_splitted[this.reading_index])
+      this.$emit('display-changed', this.text_splitted[this.reading_index], this.read_word)
       function next () {
         if (_this.reading_index > _this.text_splitted.length - 2) {
           _this.resetReading()
         } else {
-          _this.$emit('display-changed', _this.text_splitted[_this.reading_index + 1])
+          _this.$emit('display-changed', _this.text_splitted[_this.reading_index + 1], _this.read_word)
           _this.reading_index++
           _this.reading_machine = setTimeout(next, _this.reading_time[_this.reading_index])
         }
@@ -191,7 +202,7 @@ export default {
     },
 
     resetReading () {
-      this.$emit('display-changed', '')
+      this.$emit('display-changed', '', false, true)
       clearInterval(this.reading_machine)
       this.is_reading = false
       this.is_stopped = false
