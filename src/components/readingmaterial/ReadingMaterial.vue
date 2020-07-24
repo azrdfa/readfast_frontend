@@ -1,28 +1,14 @@
 <template>
   <div id="readingmaterial">
-    <div v-if="load_reading_materials" class="custom-animation">
-      <b-icon-arrow-clockwise animation="spin" font-scale="2" />
-      <p>Wait a second...</p>
-    </div>
-    <div v-else class="custom-animation">
+    <div class="custom-animation">
       <p>Reading Material</p>
       <b-icon-chevron-compact-down
-        v-if="!show_reading_materials"
         font-scale="3"
         class="library_toggle"
-        @click="showReadingMaterials(true)"
-      />
-      <b-icon-chevron-compact-up
-        v-else
-        font-scale="3"
-        class="library_toggle"
-        @click="showReadingMaterials(false)"
+        @click="goToReadingMaterials"
       />
     </div>
-    <div
-      v-if="show_reading_materials"
-      class="flex-wrap-container margin-component"
-    >
+    <div class="flex-wrap-container margin-component">
       <b-card
         class="text-truncate flex-wrap-multiple"
         v-for="(reading_material, index) in reading_materials"
@@ -105,29 +91,26 @@
 </template>
 <script>
 /* eslint-disable prettier/prettier */
-import Vue from 'vue'
 import axios from 'axios'
-import { BIcon, BIconXCircle, BIconArrowClockwise, BIconChevronCompactDown, BIconChevronCompactUp } from 'bootstrap-vue'
+import { BIconXCircle, BIconChevronCompactDown } from 'bootstrap-vue'
 export default {
   name: 'readingmaterial',
   props: {
     mode: {
       type: String,
       required: true
+    },
+    reading_materials: {
+      type: Array,
+      required: true
     }
   },
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    BIcon,
     BIconXCircle,
-    BIconArrowClockwise,
-    BIconChevronCompactDown,
-    BIconChevronCompactUp
+    BIconChevronCompactDown
   },
   data () {
     return {
-      show_reading_materials: false,
-      load_reading_materials: true,
       load_book: false,
       load_book_id: null,
       load_chapter: false,
@@ -138,22 +121,13 @@ export default {
         title: '',
         sub_title: '',
         chapters: []
-      },
-      reading_materials: []
+      }
     }
   },
   methods: {
-    showReadingMaterials (value) {
-      const _this = this
-      if (value === true) {
-        this.show_reading_materials = true
-        Vue.nextTick(function () {
-          const library = _this.$el.getElementsByClassName('library_toggle')[0]
-          library.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      } else {
-        this.show_reading_materials = false
-      }
+    goToReadingMaterials () {
+      const library = this.$el.getElementsByClassName('library_toggle')[0]
+      library.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     fetchBookChapter (index) {
       this.load_book = true
@@ -211,12 +185,6 @@ export default {
         return 'outline-dark'
       }
     }
-  },
-  mounted () {
-    axios.get('http://localhost:8000/reading-material/all/').then(response => {
-      this.reading_materials = response.data.data
-      this.load_reading_materials = false
-    })
   }
 }
 </script>
