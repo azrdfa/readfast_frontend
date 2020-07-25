@@ -1,42 +1,49 @@
 <template>
   <div id="readingmaterial">
-    <div v-if="load_books" class="custom-animation">
-      <b-icon-arrow-clockwise animation="spin" font-scale="2" />
-      <p>Wait a second...</p>
-    </div>
-    <div v-else class="custom-animation">
+    <div class="custom-animation">
       <p>Reading Material</p>
       <b-icon-chevron-compact-down
-        v-if="!show_books"
         font-scale="3"
         class="library_toggle"
-        @click="showBooks(true)"
-      />
-      <b-icon-chevron-compact-up
-        v-else
-        font-scale="3"
-        class="library_toggle"
-        @click="showBooks(false)"
+        @click="goToReadingMaterials"
       />
     </div>
-    <div v-if="show_books" class="flex-wrap-container margin-component">
+    <div class="flex-wrap-container margin-component">
       <b-card
         class="text-truncate flex-wrap-multiple"
-        v-for="(book, index) in books"
+        v-for="(reading_material, index) in reading_materials"
         v-bind:key="index"
         :bg-variant="changeVariantInvert"
       >
-        <template v-slot:header> Available in {{ book.language }} </template>
-        <b-card-title>{{ book.title }}</b-card-title>
-        <b-card-sub-title>{{ book.sub_title }}</b-card-sub-title>
+        <template v-slot:header>
+          Available in {{ reading_material.language }}
+        </template>
+        <b-card-title>{{ reading_material.title }}</b-card-title>
+        <b-card-sub-title>{{ reading_material.sub_title }}</b-card-sub-title>
         <template v-slot:footer>
           <b-button
+            v-if="reading_material.category == 'book'"
             :variant="changeOutlineVariant"
             size="sm"
-            @click="openModal(index)"
+            @click="fetchBookChapter(index)"
             block
-            >Chapter List</b-button
-          >
+            >Show Chapter
+            <b-spinner
+              v-if="load_book && load_book_id == reading_material.id"
+              class="ml-2"
+              small
+          /></b-button>
+          <b-button
+            v-else
+            :variant="changeOutlineVariant"
+            size="sm"
+            @click="fetchStoryContent(index)"
+            block
+            >Read Story<b-spinner
+              v-if="load_story && load_story_id == reading_material.id"
+              class="ml-2"
+              small
+          /></b-button>
         </template>
       </b-card>
     </div>
@@ -69,11 +76,11 @@
           class="flex-wrap-single"
           v-bind:key="index"
           style="text-align: start;"
-          @click="readChapter(chapter.id)"
+          @click="fetchChapterContent(chapter.id, chapter.title)"
         >
           Chapter {{ chapter.number }} : {{ chapter.title }}
           <b-spinner
-            v-if="load_chapter && selected_chapter == chapter.id"
+            v-if="load_chapter && load_chapter_id == chapter.id"
             class="ml-2"
             small
           />
@@ -84,68 +91,91 @@
 </template>
 <script>
 /* eslint-disable prettier/prettier */
-import Vue from 'vue'
 import axios from 'axios'
-import { BIcon, BIconXCircle, BIconArrowClockwise, BIconChevronCompactDown, BIconChevronCompactUp } from 'bootstrap-vue'
+import { BIconXCircle, BIconChevronCompactDown } from 'bootstrap-vue'
 export default {
   name: 'readingmaterial',
   props: {
     mode: {
       type: String,
       required: true
+    },
+    reading_materials: {
+      type: Array,
+      required: true
     }
   },
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    BIcon,
     BIconXCircle,
-    BIconArrowClockwise,
-    BIconChevronCompactDown,
-    BIconChevronCompactUp
+    BIconChevronCompactDown
   },
   data () {
     return {
-      show_books: false,
-      load_books: true,
+      load_book: false,
+      load_book_id: null,
       load_chapter: false,
-      selected_chapter: 0,
+      load_chapter_id: null,
+      load_story: false,
+      load_story_id: null,
       selected_book: {
         title: '',
         sub_title: '',
         chapters: []
-      },
-      books: []
+      }
     }
   },
   methods: {
-    showBooks (value) {
-      const _this = this
-      if (value === true) {
-        this.show_books = true
-        Vue.nextTick(function () {
-          const library = _this.$el.getElementsByClassName('library_toggle')[0]
-          library.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        })
-      } else {
-        this.show_books = false
-      }
+    goToReadingMaterials () {
+      const library = this.$el.getElementsByClassName('library_toggle')[0]
+      library.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
-    openModal (index) {
-      this.selected_book.title = this.books[index].title
-      this.selected_book.sub_title = this.books[index].sub_title
-      this.selected_book.chapters = this.books[index].chapters
+    fetchBookChapter (index) {
+      this.load_book = true
+      this.load_book_id = this.reading_materials[index].id
+      axios
+        .get('http://localhost:8000/reading-material/book-chapters/' + this.reading_materials[index].id + '/')
+        .then((response) => {
+          this.selected_book.title = this.reading_materials[index].title
+          this.selected_book.sub_title = this.reading_materials[index].sub_title
+          this.selected_book.chapters = response.data.data
+          this.load_book = false
+          this.load_book_id = null
+        })
       this.$bvModal.show('chapter-modal')
     },
-    readChapter (id) {
-      this.load_chapter = true
-      this.selected_chapter = id
+    fetchStoryContent (index) {
+      this.load_story = true
+      this.load_story_id = this.reading_materials[index].id
       axios
-        .get('http://localhost:8000/readingmaterial/chapter/' + id)
+        .get('http://localhost:8000/reading-material/story-content/' + this.reading_materials[index].id + '/')
         .then((response) => {
-          this.$emit('content-changed', response.data.content)
+          this.$emit('content-changed', response.data.data)
+          this.load_story = false
+          this.load_story_id = null
+          this.$bvToast.toast('Content ready - ' + this.reading_materials[index].title, {
+            title: 'Notification',
+            autoHideDelay: 3000,
+            appendToast: true,
+            toaster: 'b-toaster-top-left'
+          })
+        })
+    },
+    fetchChapterContent (id, title) {
+      this.load_chapter = true
+      this.load_chapter_id = id
+      axios
+        .get('http://localhost:8000/reading-material/chapter-content/' + id + '/')
+        .then((response) => {
+          this.$emit('content-changed', response.data.data)
           this.load_chapter = false
-          this.selected_chapter = 0
+          this.load_chapter_id = null
           this.$bvModal.hide('chapter-modal')
+          this.$bvToast.toast('Content ready - ' + title, {
+            title: 'Notification',
+            autoHideDelay: 3000,
+            appendToast: true,
+            toaster: 'b-toaster-top-left'
+          })
         })
     }
   },
@@ -167,12 +197,6 @@ export default {
         return 'outline-dark'
       }
     }
-  },
-  mounted () {
-    axios.get('http://localhost:8000/readingmaterial/book/').then(response => {
-      this.books = response.data
-      this.load_books = false
-    })
   }
 }
 </script>
