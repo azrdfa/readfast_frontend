@@ -152,7 +152,7 @@ export default {
           this.$emit('content-changed', response.data.data)
           this.load_story = false
           this.load_story_id = null
-          this.$bvToast.toast('Ready to read ' + this.reading_materials[index].title, {
+          this.$bvToast.toast('Content ready - ' + this.reading_materials[index].title, {
             title: 'Notification',
             autoHideDelay: 3000,
             appendToast: true,
@@ -170,7 +170,7 @@ export default {
           this.load_chapter = false
           this.load_chapter_id = null
           this.$bvModal.hide('chapter-modal')
-          this.$bvToast.toast('Ready to read ' + title, {
+          this.$bvToast.toast('Content ready - ' + title, {
             title: 'Notification',
             autoHideDelay: 3000,
             appendToast: true,
