@@ -108,6 +108,8 @@ export default {
         this.reading_materials = response.data.data
         this.load_reading_materials = true
       })
+    axios
+      .post('http://localhost:8000/activity/post-log/')
   }
 }
 </script>
