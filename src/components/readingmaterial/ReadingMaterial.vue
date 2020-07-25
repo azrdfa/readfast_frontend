@@ -76,7 +76,7 @@
           class="flex-wrap-single"
           v-bind:key="index"
           style="text-align: start;"
-          @click="fetchChapterContent(chapter.id)"
+          @click="fetchChapterContent(chapter.id, chapter.title)"
         >
           Chapter {{ chapter.number }} : {{ chapter.title }}
           <b-spinner
@@ -152,9 +152,15 @@ export default {
           this.$emit('content-changed', response.data.data)
           this.load_story = false
           this.load_story_id = null
+          this.$bvToast.toast('Ready to read ' + this.reading_materials[index].title, {
+            title: 'Notification',
+            autoHideDelay: 3000,
+            appendToast: true,
+            toaster: 'b-toaster-top-left'
+          })
         })
     },
-    fetchChapterContent (id) {
+    fetchChapterContent (id, title) {
       this.load_chapter = true
       this.load_chapter_id = id
       axios
@@ -164,6 +170,12 @@ export default {
           this.load_chapter = false
           this.load_chapter_id = null
           this.$bvModal.hide('chapter-modal')
+          this.$bvToast.toast('Ready to read ' + title, {
+            title: 'Notification',
+            autoHideDelay: 3000,
+            appendToast: true,
+            toaster: 'b-toaster-top-left'
+          })
         })
     }
   },
