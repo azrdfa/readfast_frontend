@@ -154,9 +154,10 @@ export default {
           this.load_story_id = null
           this.$bvToast.toast('Content ready - ' + this.reading_materials[index].title, {
             title: 'Notification',
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
             appendToast: true,
-            toaster: 'b-toaster-top-left'
+            variant: 'info',
+            toaster: 'b-toaster-bottom-right'
           })
         })
     },
@@ -172,9 +173,10 @@ export default {
           this.$bvModal.hide('chapter-modal')
           this.$bvToast.toast('Content ready - ' + title, {
             title: 'Notification',
-            autoHideDelay: 3000,
+            autoHideDelay: 5000,
             appendToast: true,
-            toaster: 'b-toaster-top-left'
+            variant: 'info',
+            toaster: 'b-toaster-bottom-right'
           })
         })
     }

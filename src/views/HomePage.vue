@@ -75,10 +75,8 @@ export default {
     }
   },
   methods: {
-    editDisplay (value, isWord, isReset) {
-      if (isReset) {
-        this.display_size = 2
-      } else if (isWord) {
+    editDisplay (value, isWord) {
+      if (isWord) {
         this.display_size = 3.5
       } else {
         if (value.length >= 210) {
