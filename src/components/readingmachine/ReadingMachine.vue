@@ -91,14 +91,12 @@
 /* eslint-disable prettier/prettier */
 import Vue from 'vue'
 import progressbar from '@/components/readingmachine/ProgressBar'
-import { BIcon, BIconPlay, BIconPause, BIconArrowClockwise, BIconSkipForward } from 'bootstrap-vue'
+import { BIconPlay, BIconPause, BIconArrowClockwise, BIconSkipForward } from 'bootstrap-vue'
 export default {
   name: 'readingmachine',
   components: {
     // eslint-disable-next-line vue/no-unused-components
     progressbar,
-    // eslint-disable-next-line vue/no-unused-components
-    BIcon,
     BIconPlay,
     BIconPause,
     BIconArrowClockwise,
@@ -135,6 +133,10 @@ export default {
     }
   },
   methods: {
+    // method to prepare readings ==>
+    changeContent (value) {
+      this.$emit('update:content', value)
+    },
     changeReadingStyle (value) {
       if (value === 'word') {
         this.read_word = true
@@ -142,56 +144,92 @@ export default {
         this.read_word = false
       }
     },
-
+    removeInvalidChar (content) {
+      const validChar = [33, 45, 63]
+      const result = []
+      for (var i = 0; i < content.length; i++) {
+        const element = content[i]
+        let newElement = ''
+        for (var j = 0; j < element.length; j++) {
+          const charCode = element.charCodeAt(j)
+          // match alphanumeric
+          if ((charCode > 47 && charCode < 58) || (charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123)) {
+            newElement += String.fromCharCode(charCode)
+          } else if (validChar.includes(charCode)) {
+            newElement += String.fromCharCode(charCode)
+          }
+        }
+        newElement = newElement.toLowerCase()
+        result.push(newElement)
+      }
+      for (var k = 0; k < content.length; k++) {
+        console.log(`before: ${content[k]}`)
+        console.log(`after: ${result[k]}`)
+      }
+      return result
+    },
+    customSplit (content, separator) {
+      // iteration to clean content from \n and \r
+      let cleanContent = ''
+      content.split('').map(char => {
+        if (char !== '\n' && char !== '\r') {
+          cleanContent += char
+        }
+      })
+      // iteration to split content based on separator
+      const result = []
+      let resultElement = ''
+      let startIndex = 0
+      cleanContent.split('').map((char, index) => {
+        if (char === separator) {
+          resultElement = cleanContent.substring(startIndex, index)
+          result.push(resultElement)
+          startIndex = index + 1
+        } else if (index === cleanContent.length - 1) {
+          resultElement = cleanContent.substring(startIndex, index + 1)
+          result.push(resultElement)
+          startIndex = index + 1
+        }
+      })
+      return result
+    },
     initReadingMachine () {
       if (this.read_word) {
-        this.text_splitted = this.content.split(' ')
-        this.cleanText()
-        for (let i = 0; i < this.text_splitted.length; i++) {
-          this.reading_time[i] = this.reading_speed
-        }
+        this.text_splitted = this.customSplit(this.content, ' ')
+        this.text_splitted = this.removeInvalidChar(this.text_splitted)
+        this.text_splitted.map((element, index) => {
+          this.reading_time[index] = this.reading_speed
+        })
       } else {
-        let sentenceWord
-        this.text_splitted = this.content.split('.')
-        this.cleanText()
-        for (let i = 0; i < this.text_splitted.length; i++) {
-          sentenceWord = this.text_splitted[i].split(' ')
-          this.reading_time[i] = sentenceWord.length * this.reading_speed
-        }
+        this.text_splitted = this.customSplit(this.content, '.')
+        this.text_splitted.map((element, index) => {
+          const wordCount = this.text_splitted[index].split(' ')
+          this.reading_time[index] = wordCount.length * this.reading_speed
+        })
       }
-
       this.is_reading = true
       this.startReading()
       // this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
     },
 
-    cleanText () {
-      const tmpTextSplitted = []
-      this.text_splitted.forEach(function (value) {
-        if (value !== '') {
-          tmpTextSplitted.push(value)
-        }
-      })
-      this.text_splitted = tmpTextSplitted
-    },
-
+    // method to manipulate reading process ==>
     startReading () {
       const _this = this
-      this.$emit('display-changed', this.text_splitted[this.reading_index])
+      this.$emit('display-changed', this.text_splitted[this.reading_index], this.read_word)
       function next () {
         if (_this.reading_index > _this.text_splitted.length - 2) {
           _this.resetReading()
         } else {
-          _this.$emit('display-changed', _this.text_splitted[_this.reading_index + 1])
+          _this.$emit('display-changed', _this.text_splitted[_this.reading_index + 1], _this.read_word)
           _this.reading_index++
           _this.reading_machine = setTimeout(next, _this.reading_time[_this.reading_index])
         }
       }
       this.reading_machine = setTimeout(next, this.reading_time[this.reading_index])
     },
-
     resetReading () {
-      this.$emit('display-changed', '')
+      this.$emit('display-changed', '', false)
+      // clear temporary value
       clearInterval(this.reading_machine)
       this.is_reading = false
       this.is_stopped = false
@@ -199,28 +237,20 @@ export default {
       this.reading_index = 0
       this.reading_time = {}
     },
-
     stopReading () {
       clearInterval(this.reading_machine)
       // this.bus.$emit('stop-progress')
       this.is_stopped = true
     },
-
     continueReading () {
       this.is_stopped = false
       this.startReading()
       // this.bus.$emit('start-progress', this.text_splitted.length, this.reading_time, this.reading_index)
     },
-
     forceStopReading () {
       // this.bus.$emit('stop-progress')
       this.resetReading()
     },
-
-    changeContent (value) {
-      this.$emit('update:content', value)
-    },
-
     skipReading () {
       // eslint-disable-next-line no-unused-vars
       const _this = this

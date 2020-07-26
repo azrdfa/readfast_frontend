@@ -75,11 +75,15 @@ export default {
     }
   },
   methods: {
-    editDisplay (value) {
-      if (value.length >= 210) {
-        this.display_size = 1.5
+    editDisplay (value, isWord) {
+      if (isWord) {
+        this.display_size = 3.5
       } else {
-        this.display_size = 2
+        if (value.length >= 210) {
+          this.display_size = 1.5
+        } else {
+          this.display_size = 2
+        }
       }
       this.display = value
     },
