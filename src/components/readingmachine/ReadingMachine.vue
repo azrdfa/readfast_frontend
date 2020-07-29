@@ -1,15 +1,17 @@
 <template>
   <div id="readingmachine" class="relative-container">
     <b-button
+      class="absolute-container"
+      id="reading_machine_skip"
       size="sm"
       :variant="changeVariant"
-      class="absolute-container"
       :disabled="!(is_reading && !read_word)"
       @click="skipReading"
       ><b-icon-skip-forward
     /></b-button>
     <b-form-textarea
       class="component-margin"
+      id="reading_machine_text_area"
       rows="5"
       no-resize
       :value="content"
@@ -17,8 +19,9 @@
       placeholder="Write something here.."
     ></b-form-textarea>
     <b-dropdown
-      size="sm"
       class="component-margin"
+      id="reading_machine_reading_type"
+      size="sm"
       :split-variant="changeOutlineVariant"
       :variant="changeVariant"
       :text="read_word ? 'Read by word' : 'Read by sentence'"
@@ -39,6 +42,7 @@
     <b-row class="component-margin">
       <b-col cols="4">
         <b-form-select
+          id="reading_machine_adjust_speed"
           v-model="reading_speed"
           :options="speed_option"
           size="sm"
@@ -53,6 +57,7 @@
       </b-col>
       <b-col cols="4">
         <b-button
+          id="reading_machine_stop_continue"
           v-if="!is_stopped"
           size="sm"
           :variant="changeVariant"
@@ -75,6 +80,7 @@
       </b-col>
       <b-col cols="4">
         <b-button
+          id="reading_machine_reset"
           :disabled="!is_reading"
           @click="forceStopReading"
           size="sm"

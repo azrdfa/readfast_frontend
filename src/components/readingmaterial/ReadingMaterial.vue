@@ -13,6 +13,7 @@
         class="text-truncate flex-wrap-multiple"
         v-for="(reading_material, index) in reading_materials"
         v-bind:key="index"
+        :id="'reading_' + index"
         :bg-variant="changeVariantInvert"
       >
         <template v-slot:header>
@@ -20,6 +21,18 @@
         </template>
         <b-card-title>{{ reading_material.title }}</b-card-title>
         <b-card-sub-title>{{ reading_material.sub_title }}</b-card-sub-title>
+        <div id="tag-container">
+          <h6>Related Tags:</h6>
+          <div id="flex-wrap">
+            <b-badge
+              v-for="(tag, index) in reading_material.tags"
+              v-bind:key="index"
+              class="flex-wrap-element"
+              :variant="changeVariant"
+              >{{ tag }}</b-badge
+            >
+          </div>
+        </div>
         <template v-slot:footer>
           <b-button
             v-if="reading_material.category == 'book'"

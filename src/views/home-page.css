@@ -38,3 +38,8 @@ img {
 .invert_effect {
   filter: invert(100%); 
 }
+
+/* overlay for tutorial */
+.v-tour__target--highlighted {
+  box-shadow: 0 0 0 99999px rgba(0,0,0,.4);
+}

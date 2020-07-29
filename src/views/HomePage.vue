@@ -14,13 +14,13 @@
       <b-container id="homebody">
         <b-img
           :class="{ invert_effect: mode === 'dark' }"
-          center
           :src="logo"
           alt="logo"
+          center
         />
         <b-row class="fill-top center">
           <b-col class="align-self-end" style="text-align: center;">
-            <h2 v-if="display == ''">-</h2>
+            <h2 v-if="display == ''" id="display">-</h2>
             <h2 v-bind:style="displayStyle" v-else>{{ display }}</h2>
           </b-col>
         </b-row>
@@ -36,6 +36,7 @@
         <b-row>
           <b-col class="align-self-start">
             <ReadingMaterial
+              id="anjay"
               @content-changed="editContent"
               :mode="mode"
               :reading_materials="reading_materials"
@@ -45,6 +46,12 @@
       </b-container>
       <Footer />
     </div>
+    <v-tour
+      name="tutorial"
+      :steps="tutorialSteps"
+      :options="tutorialOptions"
+      :callbacks="tutorialCallbacks"
+    ></v-tour>
   </div>
 </template>
 <script>
@@ -71,10 +78,138 @@ export default {
       display_size: 2,
       mode: 'light',
       reading_materials: [],
-      load_reading_materials: false
+      load_reading_materials: false,
+      currentTutorialStep: 0,
+      tutorialStepId: [
+        'display',
+        'reading_machine_text_area',
+        'reading_machine_reading_type',
+        'reading_machine_adjust_speed',
+        'reading_machine_stop_continue',
+        'reading_machine_reset',
+        'reading_machine_skip',
+        'reading_0'
+      ],
+      tutorialCallbacks: {
+        onNextStep: this.goToNextComponent,
+        onPreviousStep: this.goToPreviousComponent
+      },
+      tutorialOptions: {
+        useKeyboardNavigation: true,
+        highlight: true,
+        labels: {
+          buttonSkip: 'Skip Tutorial',
+          buttonPrevious: 'Previous',
+          buttonNext: 'Next',
+          buttonStop: 'Finish Tutorial'
+        }
+      },
+      tutorialSteps: [
+        {
+          target: '#display',
+          header: {
+            title: 'First time here?'
+          },
+          content: 'Let\'s get started! Word or sentence will quickly appear here',
+          params: {
+            placement: 'top',
+            enableScrolling: false,
+            highlight: false
+          }
+        },
+        {
+          target: '#reading_machine_text_area',
+          header: {
+            title: 'Text Area'
+          },
+          content: 'You can write sentences manually here',
+          params: {
+            placement: 'right',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_machine_reading_type',
+          header: {
+            title: 'Reading Type'
+          },
+          content: 'There are two reading styles to choose from. it\'s read by sentence and read by word',
+          params: {
+            placement: 'right',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_machine_adjust_speed',
+          header: {
+            title: 'Adjust Speed'
+          },
+          content: 'You can adjust your reading speed here from slow to medium to fast',
+          params: {
+            placement: 'left',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_machine_stop_continue',
+          header: {
+            title: 'Pause Button'
+          },
+          content: 'While you are reading you can press this button to stop or continue',
+          params: {
+            placement: 'bottom',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_machine_reset',
+          header: {
+            title: 'Reset Button'
+          },
+          content: 'While you are reading you can repeat the reading process by pressing this button',
+          params: {
+            placement: 'right',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_machine_skip',
+          header: {
+            title: 'Skip Button'
+          },
+          content: 'When you are reading in a per-sentence reading style you can skip by pressing this button',
+          params: {
+            placement: 'top',
+            enableScrolling: false
+          }
+        },
+        {
+          target: '#reading_0',
+          header: {
+            title: 'Reading Material'
+          },
+          content: 'We also provide reading material which includes novels and short stories',
+          params: {
+            placement: 'top',
+            enableScrolling: false
+          }
+        }
+      ]
     }
   },
   methods: {
+    goToNextComponent () {
+      this.currentTutorialStep += 1
+      const currentId = this.tutorialStepId[this.currentTutorialStep]
+      const currentComponent = document.getElementById(currentId)
+      currentComponent.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    },
+    goToPreviousComponent () {
+      this.currentTutorialStep -= 1
+      const currentId = this.tutorialStepId[this.currentTutorialStep]
+      const currentComponent = document.getElementById(currentId)
+      currentComponent.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    },
     editDisplay (value, isWord) {
       if (isWord) {
         this.display_size = 3.5
@@ -111,6 +246,10 @@ export default {
       .then((response) => {
         this.reading_materials = response.data.data
         this.load_reading_materials = true
+        if (localStorage.hasVisitedReadFast === undefined) {
+          localStorage.setItem('hasVisitedReadFast', 1)
+          this.$tours.tutorial.start()
+        }
       })
     axios
       .post('http://localhost:8000/activity/post-log/')

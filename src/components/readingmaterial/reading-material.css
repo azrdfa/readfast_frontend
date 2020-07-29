@@ -38,3 +38,28 @@
 .custom-animation .bi-chevron-compact-up:hover {
   transform: scale(1.5);
 }
+
+#tag-container {
+  margin-top: 0.5rem;
+}
+
+#tag-container h6 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#tag-container #flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+
+#tag-container #flex-wrap .flex-wrap-element {
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* overlay for tutorial */
+.v-tour__target--highlighted {
+  box-shadow: 0 0 0 99999px rgba(0,0,0,.4);
+}
