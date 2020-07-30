@@ -170,7 +170,7 @@ export default {
             autoHideDelay: 5000,
             appendToast: true,
             variant: 'info',
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-top-left'
           })
         })
     },
@@ -189,7 +189,7 @@ export default {
             autoHideDelay: 5000,
             appendToast: true,
             variant: 'info',
-            toaster: 'b-toaster-bottom-right'
+            toaster: 'b-toaster-top-left'
           })
         })
     }

@@ -166,6 +166,7 @@ export default {
           }
         }
         newElement = newElement.toLowerCase()
+        newElement = newElement.charAt(0).toUpperCase() + newElement.slice(1)
         result.push(newElement)
       }
       for (var k = 0; k < content.length; k++) {
