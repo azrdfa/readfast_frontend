@@ -146,7 +146,7 @@ export default {
       this.load_book = true
       this.load_book_id = this.reading_materials[index].id
       axios
-        .get('http://localhost:8000/reading-material/book-chapters/' + this.reading_materials[index].id + '/')
+        .get('http://readfast-be.id/reading-material/book-chapters/' + this.reading_materials[index].id + '/')
         .then((response) => {
           this.selected_book.title = this.reading_materials[index].title
           this.selected_book.sub_title = this.reading_materials[index].sub_title
@@ -160,7 +160,7 @@ export default {
       this.load_story = true
       this.load_story_id = this.reading_materials[index].id
       axios
-        .get('http://localhost:8000/reading-material/story-content/' + this.reading_materials[index].id + '/')
+        .get('http://readfast-be.id/reading-material/story-content/' + this.reading_materials[index].id + '/')
         .then((response) => {
           this.$emit('content-changed', response.data.data)
           this.load_story = false
@@ -178,7 +178,7 @@ export default {
       this.load_chapter = true
       this.load_chapter_id = id
       axios
-        .get('http://localhost:8000/reading-material/chapter-content/' + id + '/')
+        .get('http://readfast-be.id/reading-material/chapter-content/' + id + '/')
         .then((response) => {
           this.$emit('content-changed', response.data.data)
           this.load_chapter = false

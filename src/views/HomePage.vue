@@ -242,7 +242,7 @@ export default {
   },
   mounted () {
     axios
-      .get('http://localhost:8000/reading-material/all/')
+      .get('http://readfast-be.id/reading-material/all/')
       .then((response) => {
         this.reading_materials = response.data.data
         this.load_reading_materials = true
@@ -252,7 +252,7 @@ export default {
         }
       })
     axios
-      .post('http://localhost:8000/activity/post-log/')
+      .post('http://readfast-be.id/activity/post-log/')
   }
 }
 </script>
