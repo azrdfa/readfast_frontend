@@ -241,8 +241,9 @@ export default {
     }
   },
   mounted () {
+    console.log(`VUE_APP_BACKEND_DOMAIN: ${process.env.VUE_APP_BACKEND_DOMAIN}`)
     axios
-      .get('http://readfast-be.id/reading-material/all/')
+      .get(`http://${process.env.VUE_APP_BACKEND_DOMAIN}/reading-material/all/`)
       .then((response) => {
         this.reading_materials = response.data.data
         this.load_reading_materials = true
@@ -252,7 +253,7 @@ export default {
         }
       })
     axios
-      .post('http://readfast-be.id/activity/post-log/')
+      .post(`http://${process.env.VUE_APP_BACKEND_DOMAIN}/activity/post-log/`)
   }
 }
 </script>
