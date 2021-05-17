@@ -5,7 +5,7 @@
         <div class="col-sm-12 col-md-6">
           <h6>About</h6>
           <p class="text-justify">
-            READ FAST is an application that can help you to read faster. There
+            Readfast is an application that can help you to read faster. There
             are two modes currently available. Read by word and read by
             sentence. If you want to contribute to this project, feel free to
             contact me.
@@ -26,7 +26,7 @@
       <div class="row">
         <div class="col-md-8 col-sm-6 col-xs-12">
           <p class="copyright-text">
-            Copyright &copy; 2021 All Rights Reserved by READ FAST
+            Copyright &copy; 2021 All Rights Reserved by Readfast
           </p>
         </div>
       </div>
